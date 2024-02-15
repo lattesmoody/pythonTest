@@ -2,7 +2,7 @@ import tkinter as tk
 
 def process_input():
     input_text = input_text_widget.get("1.0", "end-1c")  # 입력된 텍스트 가져오기
-    processed_text = input_text.replace('“', "'").replace('”', "'").replace('>', '')  # 처리된 텍스트
+    processed_text = input_text.replace('“', "'").replace('”', "'")  # 처리된 텍스트
     output_text_widget.delete("1.0", "end")  # 이전 결과 지우기
     lines = processed_text.split('\n')  # 개행을 기준으로 문장 분할
     
