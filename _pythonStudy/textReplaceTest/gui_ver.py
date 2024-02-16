@@ -9,7 +9,7 @@ def process_input():
     processed_lines = []  # 처리된 텍스트를 저장할 리스트
     skip_next = False  # 다음 문장을 건너뛸지 여부를 나타내는 변수
     for line in lines:
-        if ('def' in line) or ('with' in line):  # 'def' 키워드를 포함하고 있는 경우
+        if (('def' in line) or ('with' in line)):  # 'def' 키워드를 포함하고 있는 경우
             processed_lines.append(line)  # 'def' 포함된 줄은 들여쓰기 없이 추가
             skip_next = True  # 다음 문장을 건너뛰도록 설정
         elif skip_next:
