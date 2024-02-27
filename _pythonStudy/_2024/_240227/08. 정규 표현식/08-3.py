@@ -1,48 +1,92 @@
-# 파이썬 정규 표현식 지원하는 re 모듈
+# 문자열 소비가 없는 메타 문자.
+"""
+| (or)
 
 """
-match
-search
-findall
-finditer
-"""
-
 import re
-p = re.compile('[a-z]+')
+p = re.compile('Crow|Servo')
 
-m = p.match("3python00")  # None
-n= p.match("python00") # python
-print(m) 
-print(n)
+"""
+^
 
+각 줄의 문자열의 맨 처음과 일치함을 의미.
+"""
 
-o = p.search("3python00")
-print(o)
-
-
-result = p.findall("life is too short")
-print(result)
-
-
-
-k = p.match("python")
-print(k.group())
-k.start()
-k.end()
-k.span()
+print(re.search('^Life', 'Life is too short'))
 
 
 """
-컴파일 옵션
-re.DOTALL     # S
-re.IGNORECASE # I
-re.MULTILINE  # M
-re.VERBOSE    # X
+$
+
+각 줄의 문자열의 끝과 매치함을 의미
+"""
+
+"""
+\A
+
+줄과 상관없이 전체 문자열의 처음하고만 매치한다.
+"""
+
+"""
+\Z
+
+줄과 상관없이 전체 문자열의 끝과 매치함을 의미
+
+"""
+
+
+"""
+\b
+
+단어 구분자
+"""
+
+"""
+\B
+
+(\b와 반대.)
+화이트스페이스로 구분된 단어가 아닌 경우에만 매치.
+"""
+
+
+"""
+그루핑
+
+예) (ABC)+
+
+group(인덱스)
+
+(0) 매치된 전자 문자열
+(1)
+(2)
+(3)
+..
+
+"""
+
+
+"""
+그루핑 (심화)
+그루핑된 문자에 이름 붙이기
+(?P<그룹명>...)
+"""
+
+"""
+전방 탐색
+
+긍정형(positive) 전방 탐색
+(?=:)
+
+부정형
 
 """
 
 """
-역슬래쉬 문제
+문자열 바꾸기 - sub 메서드 
+
 """
-print('\\\\')
-print(r'\\')
+
+"""
+greedy, non-greedy
+
+"""
