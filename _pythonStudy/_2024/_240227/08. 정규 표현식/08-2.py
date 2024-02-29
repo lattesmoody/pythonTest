@@ -26,7 +26,7 @@ print(result)
 
 
 k = p.match("python")
-print(k.group())
+print(f'확인용 {k.group()}')
 k.start()
 k.end()
 k.span()
