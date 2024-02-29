@@ -5,9 +5,9 @@
 
 import random
 
-list = []
-for _ in range(10):
-    list.append(random.randint(1,101))
+# list = []
+# for _ in range(10):
+#     list.append(random.randint(1,100)) # ~ 이상 ~ 이하
 
 list.sort()
 print(list)

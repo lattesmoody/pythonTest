@@ -5,12 +5,14 @@ class BankAccount:
 
     def deposit(self,amount):
         self.balance = self.balance + amount
-
+        print(self.balance)
 
     def withdraw(self,amount):
         if self.balance - amount < 0:
             print("잔액이 부족합니다.")
-        self.balance = self.balance + amount
+        else :
+            self.balance = self.balance -  amount
+        print(self.balance)
         
 
 

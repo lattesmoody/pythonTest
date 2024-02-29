@@ -5,8 +5,9 @@ class Person:
         self.age = age
     
     def greet(self):
-        string = self.name + "님이 " + str(self.age) + "살입니다"
-        return string
+        #string = self.name + "님이 " + str(self.age) + "살입니다"
+        return f'{self.name}님이 {self.age}살입니다.'
+        #return string
 
 person1 = Person("홍길동", 30)
 print(person1.greet())  # 출력: 홍길동님이 30살입니다.
