@@ -1,33 +1,52 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, BackgroundTasks, HTTPException
 from contextlib import asynccontextmanager
 import asyncio
 import uvicorn
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+import logging
+
+# 로깅 설정
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 scheduler = AsyncIOScheduler()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("Starting up the server...")
+    logger.info("Starting up the server...")
     scheduler.start()
     yield
-    print("Shutting down the server...")
+    logger.info("Shutting down the server...")
     scheduler.shutdown()
 
 app = FastAPI(lifespan=lifespan)
 
-@app.on_event("startup")
-async def startup_event():
-    # 예시 작업 추가
-    scheduler.add_job(lambda: print("Scheduled job running..."), 'interval', seconds=10)
+@app.post("/add_job")
+async def add_job(background_tasks: BackgroundTasks):
+    # 작업 추가 함수
+    def job_function():
+        logger.info("Scheduled job running...")
+
+    # 백그라운드 작업으로 스케줄러 작업 추가
+    job = scheduler.add_job(job_function, 'interval', seconds=10)
+    job_id = job.id
+    return {"message": "Job is being added in the background.", "job_id": job_id}
+
+@app.post("/remove_job")
+async def remove_job(job_id: str):
+    job = scheduler.get_job(job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    job.remove()
+    return {"message": f"Job {job_id} has been removed."}
 
 @app.post("/shutdown")
-async def shutdown(request: Request):
+async def shutdown(request: Request, background_tasks: BackgroundTasks):
     if scheduler.get_jobs():
         return {"message": "There are still scheduled jobs running. Shutdown aborted."}
     
     async def terminate():
-        print("Terminating server...")
+        logger.info("Terminating server...")
         await asyncio.sleep(1)
 
         # 모든 스케줄러 작업이 완료될 때까지 대기
@@ -37,7 +56,8 @@ async def shutdown(request: Request):
         # 서버를 종료합니다.
         app.state.server.should_exit = True
 
-    asyncio.create_task(terminate())
+    # 백그라운드 작업으로 종료 작업 추가
+    background_tasks.add_task(terminate)
     return {"message": "Server is shutting down..."}
 
 async def main():
@@ -47,9 +67,9 @@ async def main():
     try:
         await server.serve()
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(f"An error occurred: {e}")
     finally:
-        print("Server has been shut down.")
+        logger.info("Server has been shut down.")
 
 if __name__ == "__main__":
     asyncio.run(main())
