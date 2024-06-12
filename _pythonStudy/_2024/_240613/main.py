@@ -40,6 +40,17 @@ async def remove_job(job_id: str):
     job.remove()
     return {"message": f"Job {job_id} has been removed."}
 
+@app.get("/jobs/")
+async def list_jobs():
+    jobs = []
+    for job in scheduler.get_jobs():
+        jobs.append({
+            "job_id": job.id,
+            "name": job.name,
+            "next_run_time": job.next_run_time.isoformat() if job.next_run_time else None
+        })
+    return jobs
+
 @app.post("/shutdown")
 async def shutdown(request: Request, background_tasks: BackgroundTasks):
     if scheduler.get_jobs():
